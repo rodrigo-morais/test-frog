@@ -1,1 +1,6 @@
 C:\Dados\RMMSoftware\Projetos\Exemplos\Tests Interview\test-frog\bin\Debug\test-frog.exe.config
+C:\Dados\RMMSoftware\Projetos\Exemplos\Tests Interview\test-frog\bin\Debug\test-frog.exe
+C:\Dados\RMMSoftware\Projetos\Exemplos\Tests Interview\test-frog\bin\Debug\test-frog.pdb
+C:\Dados\RMMSoftware\Projetos\Exemplos\Tests Interview\test-frog\obj\Debug\test-frog.csprojResolveAssemblyReference.cache
+C:\Dados\RMMSoftware\Projetos\Exemplos\Tests Interview\test-frog\obj\Debug\test-frog.exe
+C:\Dados\RMMSoftware\Projetos\Exemplos\Tests Interview\test-frog\obj\Debug\test-frog.pdb
