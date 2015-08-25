@@ -6,51 +6,78 @@ public class Frog
 {
     enum Way { step = 1, jump = 2 };
     
-    private static bool sameWay(Way way, int n)
-    {
-        var distance = 0;
+    private static List<int> getOneStep(int n){
 
-        while (distance < n)
+        var path = new List<int>();
+
+        for (var count = 0; count < n; count++)
         {
-            distance += (int)way;
+            path.Add(1);
         }
 
-        return distance == n;
+        return path;
     }
 
-    private static bool differentWay(Way way, int n)
+    private static List<List<int>> replaceStepsToJumps(List<int> original, int n)
     {
-        var distance = 0;
-        var count = 0;
+        var paths = new List<List<int>>();
 
-        while (distance < n)
+        paths.Add(original);
+        
+        for (var count = 0; count < original.Count - 1; count++)
         {
-            distance += (int)way;
+            var next = count;
+            var path = new List<int>(original);
+            
+            while (next < path.Count - 1)
+            {
+                if (path.Count >= next + 1)
+                {
+                    path.Insert(next, (int)Way.jump);
+                    path.RemoveAt(next + 1);
+                    path.RemoveAt(next + 1);
+                    
+                    paths.Add(path);
+                }
 
-            if(way == Way.step){
-                way = Way.jump;
-            }
-            else{
-                way = Way.step;
+                next += 1;
             }
 
-            count++;
         }
 
-        return distance == n && count > 1;
+        var reverses = new HashSet<List<int>>(paths);
+        foreach (var list in reverses)
+        {
+            var newList = list.Reverse<int>().ToList<int>();
+            var isNew = true;
+            var count = 0;
+
+            while (isNew && count < paths.Count)
+            {
+                if(newList.SequenceEqual(paths.ElementAt(count)))
+                {
+                    isNew = false;
+                }
+                count++;
+            }
+
+            if (isNew)
+            {
+                paths.Add(newList);
+            }
+        }
+
+        return paths;
     }
     
     public static int NumberOfWays(int n)
     {
-        var ways = 0;
-
-        ways += sameWay(Way.step, n) ? 1 : 0;
-        ways += sameWay(Way.jump, n) ? 1 : 0;
-
-        ways += differentWay(Way.step, n) ? 1 : 0;
-        ways += differentWay(Way.jump, n) ? 1 : 0;
-                
-        return ways;
+        var paths = new List<List<int>>();
+        var original = getOneStep(n);
+        paths.Add(original);
+        paths = replaceStepsToJumps(original, n);
+           
+        return paths.Count;
     }
 
     public static void Main(String[] args)
@@ -58,5 +85,7 @@ public class Frog
         Console.WriteLine(NumberOfWays(3));
         Console.WriteLine(NumberOfWays(1));
         Console.WriteLine(NumberOfWays(2));
+        Console.WriteLine(NumberOfWays(5));
+        Console.WriteLine(NumberOfWays(11));
     }
 }
