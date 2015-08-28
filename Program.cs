@@ -6,7 +6,7 @@ public class Frog
 {
     enum Way { step = 1, jump = 2 };
     
-    private static List<int> getOneStep(int n){
+    public static List<int> getOneStep(int n){
 
         var path = new List<int>();
 
@@ -18,17 +18,38 @@ public class Frog
         return path;
     }
 
-    private static List<List<int>> replaceStepsToJumps(List<int> original, int n)
+    public static void jumpingInThePath(int position, List<int> path, ref List<string> paths)
     {
-        var paths = new List<List<int>>();
+        while (position < path.Count - 1)
+        {
+            var newPath = new List<int>(path);
 
-        paths.Add(original);
+            newPath.Insert(position, (int)Way.jump);
+            newPath.RemoveAt(position + 1);
+            newPath.RemoveAt(position + 1);
+
+            var strPath = string.Join(",", newPath);
+
+            if (paths.Exists(s => s == strPath) == false)
+            {
+                paths.Add(strPath);
+            }
+
+            position++;
+        }
+    }
+
+    public static List<string> replaceStepsToJumps(List<int> original, int n)
+    {
+        var paths = new List<string>();
+
+        paths.Add(string.Join(",", original));
         
         for (var count = 0; count < original.Count - 1; count++)
         {
             var next = count;
             var path = new List<int>(original);
-            
+                        
             while (next < path.Count - 1)
             {
                 if (path.Count >= next + 1)
@@ -36,8 +57,15 @@ public class Frog
                     path.Insert(next, (int)Way.jump);
                     path.RemoveAt(next + 1);
                     path.RemoveAt(next + 1);
-                    
-                    paths.Add(path);
+
+                    var strPath = string.Join(",", path);
+
+                    if (paths.Exists(s => s == strPath) == false)
+                    {
+                        paths.Add(strPath);
+                    }
+
+                    jumpingInThePath(next + 1, path, ref paths);
                 }
 
                 next += 1;
@@ -45,23 +73,12 @@ public class Frog
 
         }
 
-        var reverses = new HashSet<List<int>>(paths);
+        var reverses = new List<string>(paths);
         foreach (var list in reverses)
         {
-            var newList = list.Reverse<int>().ToList<int>();
-            var isNew = true;
-            var count = 0;
+            var newList = new string(list.Reverse().ToArray());
 
-            while (isNew && count < paths.Count)
-            {
-                if(newList.SequenceEqual(paths.ElementAt(count)))
-                {
-                    isNew = false;
-                }
-                count++;
-            }
-
-            if (isNew)
+            if(paths.Exists(s => s == newList) == false)
             {
                 paths.Add(newList);
             }
@@ -69,13 +86,26 @@ public class Frog
 
         return paths;
     }
+
+    private static void print(List<string> paths)
+    {
+        foreach (var s in paths.OrderByDescending(s => s).ToList())
+        {
+            Console.WriteLine(s);
+        }
+        Console.Read();
+    }
     
     public static int NumberOfWays(int n)
     {
-        var paths = new List<List<int>>();
+        var paths = new List<string>();
         var original = getOneStep(n);
-        paths.Add(original);
         paths = replaceStepsToJumps(original, n);
+
+        if (n == 11)
+        {
+            print(paths);
+        }
            
         return paths.Count;
     }

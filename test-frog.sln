@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "test-frog", "test-frog.csproj", "{639D64B4-6A15-43FD-B0E7-01A6E3A8CA17}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "frog-unit-test", "..\frog-unit-test\frog-unit-test.csproj", "{588A0378-1F2B-473F-A07F-93031A7743F9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{639D64B4-6A15-43FD-B0E7-01A6E3A8CA17}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{639D64B4-6A15-43FD-B0E7-01A6E3A8CA17}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{639D64B4-6A15-43FD-B0E7-01A6E3A8CA17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{588A0378-1F2B-473F-A07F-93031A7743F9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{588A0378-1F2B-473F-A07F-93031A7743F9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{588A0378-1F2B-473F-A07F-93031A7743F9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{588A0378-1F2B-473F-A07F-93031A7743F9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
