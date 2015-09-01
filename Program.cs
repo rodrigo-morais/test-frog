@@ -4,7 +4,7 @@ using System.Linq;
 
 public class Frog
 {
-    enum Way { step = 1, jump = 2 };
+    public enum Way { step = 1, jump = 2 };
     
     public static List<int> getOneStep(int n){
 
@@ -39,11 +39,33 @@ public class Frog
         }
     }
 
-    public static List<string> replaceStepsToJumps(List<int> original, int n)
+    public static void walkingInThePath(int position, List<int> path, ref List<string> paths)
     {
-        var paths = new List<string>();
+        while (position < path.Count - 1)
+        {
+            var newPath = new List<int>(path);
 
-        paths.Add(string.Join(",", original));
+            newPath.Insert(position, (int)Way.step);
+            newPath.Insert(position + 1, (int)Way.step);
+            newPath.RemoveAt(position + 2);
+
+            var strPath = string.Join(",", newPath);
+
+            if (paths.Exists(s => s == strPath) == false)
+            {
+                paths.Add(strPath);
+            }
+
+            position += 2;
+        }
+    }
+
+    public static void replacePath(List<int> original, int n, Way type, ref List<string> paths)
+    {
+        if (paths.Exists(s => s == string.Join(",", original)) == false)
+        {
+            paths.Add(string.Join(",", original));
+        }
         
         for (var count = 0; count < original.Count - 1; count++)
         {
@@ -54,9 +76,18 @@ public class Frog
             {
                 if (path.Count >= next + 1)
                 {
-                    path.Insert(next, (int)Way.jump);
-                    path.RemoveAt(next + 1);
-                    path.RemoveAt(next + 1);
+                    if (type == Way.step)
+                    {
+                        path.Insert(next, (int)Way.jump);
+                        path.RemoveAt(next + 1);
+                        path.RemoveAt(next + 1);
+                    }
+                    else
+                    {
+                        path.Insert(next, (int)Way.step);
+                        path.Insert(next + 1, (int)Way.step);
+                        path.RemoveAt(next + 2);
+                    }
 
                     var strPath = string.Join(",", path);
 
@@ -65,10 +96,17 @@ public class Frog
                         paths.Add(strPath);
                     }
 
-                    jumpingInThePath(next + 1, path, ref paths);
+                    if (type == Way.step)
+                    {
+                        jumpingInThePath(next + 1, path, ref paths);
+                        next += 1;
+                    }
+                    else
+                    {
+                        walkingInThePath(next + 2, path, ref paths);
+                        next += 2;
+                    }
                 }
-
-                next += 1;
             }
 
         }
@@ -83,8 +121,6 @@ public class Frog
                 paths.Add(newList);
             }
         }
-
-        return paths;
     }
 
     private static void print(List<string> paths)
@@ -95,19 +131,65 @@ public class Frog
         }
         Console.Read();
     }
+
+    public static void replacePath(List<int> path, ref int acum)
+    {
+        Console.WriteLine(string.Join(",", path));
+
+        if (path.LastIndexOf((int)Way.step) <= 0 && path.Count > 1)
+        {
+            acum += 1;
+        }
+        else if(path.Count > 1)
+        {
+            var position = path.LastIndexOf((int)Way.step);
+            path[position] = (int)Way.jump;
+            path.RemoveAt(position - 1);
+            replacePath(path, ref acum);
+        }
+
+    }
+
+    public static List<int> addJump(List<int> path, int n)
+    {
+        var position = path.LastIndexOf((int)Way.step);
+
+        if (position < 0)
+        {
+            return null;
+        }
+
+        path[position] = (int)Way.jump;
+
+        if (position > 0)
+        {
+            path.RemoveAt(position - 1);
+        }
+
+        return path.Sum() == n ? path : null;
+    }
     
     public static int NumberOfWays(int n)
     {
-        var paths = new List<string>();
-        var original = getOneStep(n);
-        paths = replaceStepsToJumps(original, n);
+        Console.WriteLine("Tamanho: " + n);
 
-        if (n == 11)
+        var path = getOneStep(n);
+        var acum = 1;
+
+        Console.WriteLine(string.Join(",", path));
+
+        while (path != null)
         {
-            print(paths);
+            path = addJump(path, n);
+            if (path != null)
+            {
+                Console.WriteLine(string.Join(",", path));
+                acum++;
+            }
         }
-           
-        return paths.Count;
+
+
+        return acum;
     }
 
     public static void Main(String[] args)
@@ -117,5 +199,7 @@ public class Frog
         Console.WriteLine(NumberOfWays(2));
         Console.WriteLine(NumberOfWays(5));
         Console.WriteLine(NumberOfWays(11));
+
+        Console.Read();
     }
 }
