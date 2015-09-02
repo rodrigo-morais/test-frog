@@ -5,19 +5,7 @@ using System.Linq;
 public class Frog
 {
     public enum Way { step = 1, jump = 2 };
-    
-    public static List<int> getOneStep(int n){
-
-        var path = new List<int>();
-
-        for (var count = 0; count < n; count++)
-        {
-            path.Add(1);
-        }
-
-        return path;
-    }
-
+    /*
     public static void jumpingInThePath(int position, List<int> path, ref List<string> paths)
     {
         while (position < path.Count - 1)
@@ -149,6 +137,20 @@ public class Frog
         }
 
     }
+    */
+
+    public static List<int> getOneStep(int n)
+    {
+
+        var path = new List<int>();
+
+        for (var count = 0; count < n; count++)
+        {
+            path.Add(1);
+        }
+
+        return path;
+    }
 
     public static List<int> addJump(List<int> path, int n)
     {
@@ -168,13 +170,35 @@ public class Frog
 
         return path.Sum() == n ? path : null;
     }
+
+    public static void walkingOnThePath(List<int> path, ref int accum){
+        var lastStep = path.LastIndexOf((int)Way.step);
+
+        if (path.Count > 1 && lastStep >= 0)
+        {
+            if (lastStep == path.Count - 1)
+            {
+                path.RemoveAt(lastStep);
+                walkingOnThePath(path, ref accum);
+            }
+            else
+            {
+                var oldPath = new List<int>(path);
+                accum = accum + 1;
+                path[lastStep] = (int)Way.jump;
+                path[lastStep + 1] = (int)Way.step;
+                Console.WriteLine(string.Join(",", path));
+                walkingOnThePath(path, ref accum);
+            }
+        }
+    }
     
     public static int NumberOfWays(int n)
     {
         Console.WriteLine("Tamanho: " + n);
 
         var path = getOneStep(n);
-        var acum = 1;
+        var accum = 1;
 
         Console.WriteLine(string.Join(",", path));
 
@@ -184,12 +208,13 @@ public class Frog
             if (path != null)
             {
                 Console.WriteLine(string.Join(",", path));
-                acum++;
+                accum++;
+                walkingOnThePath(new List<int>(path), ref accum);
             }
         }
 
 
-        return acum;
+        return accum;
     }
 
     public static void Main(String[] args)
